@@ -82,7 +82,7 @@ void loop() {
     // check if new input arrived
     if (Serial.available() > 0) {
         Serial.println("Stimulation interrupted!");
-        Serial.print(n_loops)
+        Serial.print(n_loops);
         Serial.println(" bursts were delivered");
         while (1) { delay(1000); } // loop forever
     }
