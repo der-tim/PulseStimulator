@@ -60,7 +60,7 @@ void loop() {
   }
 
   // empty the serial port, so that new input can be detected
-  while (Serial.available() <= 0) { Serial.read(); }
+  while (Serial.available() > 0) { Serial.read(); }
   Serial.println("Stimulation started. Send any input to emergency stop the script.");
   
   loopStartTime = millis(); // remember when the stimulation actually started
@@ -91,5 +91,6 @@ void loop() {
   }
   
   Serial.println("Stimulation ended.");
+  while (1) { delay(1000); }
 
 }
