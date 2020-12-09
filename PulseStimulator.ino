@@ -25,11 +25,11 @@ int N_pulses = 6; // Number of consecutive pulses
 unsigned long L_pulse_length = 250; // in microseconds (us)
 unsigned long F_pulse_frequency = 24; // in Hz
 unsigned long B_burst_duration = 250000; // burst duration (us)
-unsigned long I_inter_burst_interval = 750000; // inter-burst-interval (us)
+unsigned long I_inter_burst_interval = 1750000; // inter-burst-interval (us)
 unsigned long S_total_stimulation_period_seconds = 30*60; // toal time that the protocol is repeated (in seconds!!)
 
 // nothing to change here
-unsigned int off_time = (B_burst_duration - (N_pulses*L_pulse_length) ) / N_pulses; // interval between pulses in a burst
+unsigned long off_time = (B_burst_duration - (N_pulses*L_pulse_length) ) / N_pulses; // interval between pulses in a burst
 unsigned long loopStartTime;
 
 void setup() {
@@ -70,14 +70,14 @@ void loop() {
     for (int i=0; i<N_pulses; i++) {
       // stimulation on:
       digitalWrite(TTL_PIN, HIGH);
-      delayMicroseconds(L_pulse_length);
+      long_delay_microseconds(L_pulse_length);
       // stimulation off:
       digitalWrite(TTL_PIN, LOW);
-      delayMicroseconds(off_time);
+      long_delay_microseconds(off_time);
     }
     
     // inter-burst interval
-    delayMicroseconds(I_inter_burst_interval);
+    long_delay_microseconds(I_inter_burst_interval);
 
     // check if new input arrived
     if (Serial.available() > 0) {
@@ -93,4 +93,16 @@ void loop() {
   Serial.println("Stimulation ended.");
   while (1) { delay(1000); }
 
+}
+
+/*
+ * DelayMicroseconds only works precisely for values until 16383. For longer durations, use this function or milis()
+ */
+void long_delay_microseconds(long delayTime)
+{
+  while (delayTime > 16383) {
+    delayMicroseconds(16383);
+    delayTime -= 16383;
+  }
+  delayMicroseconds(delayTime);
 }
